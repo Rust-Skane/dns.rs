@@ -1,0 +1,10 @@
+{
+   "_id": "_design/records",
+   "_rev": "4-457679eb3f0da782c44993b9d8d42cc4",
+   "language": "javascript",
+   "views": {
+       "domain": {
+           "map": "function(doc) {\n  if (doc.records) {\n    for (var i = 0; i < doc.records.length; i++) {\n      var r = doc.records[i];\n\n      emit(doc.domain, {\n        ty: r.type,\n        data: r.data,\n        ttl: r.ttl || doc.configuration.ttl,\n        class: r.class || doc.configuration.class\n      })\n    }\n  }\n}"
+       }
+   }
+}

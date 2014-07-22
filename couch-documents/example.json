@@ -1,0 +1,34 @@
+{
+   "_id": "6b02263ef516dfcc4fd1a62ac0000b9f",
+   "_rev": "4-c7fbd3714f14e49dca12eb9cec39f828",
+   "domain": [
+       "google",
+       "se"
+   ],
+   "configuration": {
+       "ttl": 86400,
+       "class": "IN"
+   },
+   "records": [
+       {
+           "type": "A",
+           "data": "74.125.232.119"
+       },
+       {
+           "type": "A",
+           "data": "74.125.232.127"
+       },
+       {
+           "type": "A",
+           "data": "74.125.232.111"
+       },
+       {
+           "type": "A",
+           "data": "74.125.232.120"
+       },
+       {
+           "type": "AAAA",
+           "data": "2a00:1450:400f:802:0:0:0:1018"
+       }
+   ]
+}
