@@ -2,20 +2,20 @@ use name;
 use rrtype;
 use class;
 
-#[deriving(Clone, Show, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Question {
   pub name: Vec<String>,
   pub rrtype: rrtype::RRType,
   pub class: class::Class
 }
 
-pub fn unpack(message: &[u8], offset: uint) -> Option<(Question, uint)> {
+pub fn unpack(message: &[u8], offset: usize) -> Option<(Question, usize)> {
   let (name, o) = match name::unpack(message, offset) {
     Some(n) => n, None => return None
   };
 
-  let ty = rrtype::unpack((message[o + 0] as u16 << 8) | (message[o + 1] as u16));
-  let cl = class::unpack((message[o + 2] as u16 << 8) | (message[o + 3] as u16));
+  let ty = rrtype::unpack(((message[o + 0] as u16) << 8) | (message[o + 1] as u16));
+  let cl = class::unpack(((message[o + 2] as u16) << 8) | (message[o + 3] as u16));
 
   return Some((Question { name: name, rrtype: ty, class: cl }, o + 4));
 }
@@ -25,7 +25,7 @@ mod tests {
   use rrtype;
   use class;
 
-  use std::io::File;
+  use std::old_io::File;
 
   #[test]
   fn test_unpack() {

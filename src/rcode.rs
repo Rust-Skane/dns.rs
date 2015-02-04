@@ -1,6 +1,6 @@
 use std::default::Default;
 
-#[deriving(Clone, Show, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum ResponseCode {
   NoError,
   FormErr,

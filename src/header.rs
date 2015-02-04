@@ -1,11 +1,11 @@
 use op;
 use rcode;
 
-use std::collections::bitv;
+use std::collections::Bitv;
 
 use std::default::Default;
 
-#[deriving(Clone, Show, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum QueryResponse {
   Query, Response
 }
@@ -14,7 +14,7 @@ impl Default for QueryResponse {
     fn default() -> QueryResponse { QueryResponse::Query }
 }
 
-#[deriving(Show, PartialEq, Default)]
+#[derive(Debug, PartialEq, Default)]
 pub struct Header {
   pub id: u16,
   pub qr: QueryResponse,
@@ -29,33 +29,33 @@ pub struct Header {
   pub rcode: rcode::ResponseCode
 }
 
-pub fn unpack(message: &[u8]) -> Option<(Header, uint)> {
+pub fn unpack(message: &[u8]) -> Option<(Header, usize)> {
   if message.len() < 4 {
     return None;
   }
 
-  let id = (message[0] as u16 << 8) | (message[1] as u16);
-  let flag_bytes = message[2 .. 4];
-  let flags = bitv::from_bytes(flag_bytes);
+  let id = ((message[0] as u16) << 8) | (message[1] as u16);
+  let flag_bytes = &message[2 .. 4];
+  let flags = Bitv::from_bytes(flag_bytes);
 
   return Some((Header {
     id: id,
-    qr: if flags.get(0) { QueryResponse::Response } else { QueryResponse::Query },
+    qr: if flags[0] { QueryResponse::Response } else { QueryResponse::Query },
     op: op::unpack((flag_bytes[0] & 0x78) >> 3),
-    aa: flags.get(5),
-    tr: flags.get(6),
-    rd: flags.get(7),
-    ra: flags.get(8),
-    reserved: flags.get(9),
-    ad: flags.get(10),
-    cd: flags.get(11),
+    aa: flags[5],
+    tr: flags[6],
+    rd: flags[7],
+    ra: flags[8],
+    reserved: flags[9],
+    ad: flags[10],
+    cd: flags[11],
     rcode: rcode::unpack((flag_bytes[1] & 0x0F) as u16)
   }, 4));
 }
 
 #[cfg(test)]
 mod tests {
-  use std::io::File;
+  use std::old_io::File;
   use std::default::Default;
 
   #[test]

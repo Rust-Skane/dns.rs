@@ -20,14 +20,14 @@ pub fn unpack(message: &[u8]) -> Option<Message> {
     Some(v) => v, None => return None
   };
 
-  let qd_count = (message[offset + 0] as u16 << 8) | (message[offset + 1] as u16);
-  let an_count = (message[offset + 2] as u16 << 8) | (message[offset + 3] as u16);
-  let ns_count = (message[offset + 4] as u16 << 8) | (message[offset + 5] as u16);
-  let ar_count = (message[offset + 6] as u16 << 8) | (message[offset + 7] as u16);
+  let qd_count = ((message[offset + 0] as u16) << 8) | (message[offset + 1] as u16);
+  let an_count = ((message[offset + 2] as u16) << 8) | (message[offset + 3] as u16);
+  let ns_count = ((message[offset + 4] as u16) << 8) | (message[offset + 5] as u16);
+  let ar_count = ((message[offset + 6] as u16) << 8) | (message[offset + 7] as u16);
 
   let mut offset = offset + 8;
 
-  let mut qd = Vec::with_capacity(qd_count as uint);
+  let mut qd = Vec::with_capacity(qd_count as usize);
 
   for _ in range(0, qd_count) {
     match question::unpack(message, offset) {
@@ -58,7 +58,7 @@ mod tests {
   use rrtype;
   use class;
 
-  use std::io::File;
+  use std::old_io::File;
   use std::default::Default;
 
   #[test]

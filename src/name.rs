@@ -1,25 +1,25 @@
 use std::str;
 
-pub fn unpack(message: &[u8], offset: uint) -> Option<(Vec<String>, uint)> {
+pub fn unpack(message: &[u8], offset: usize) -> Option<(Vec<String>, usize)> {
   let (mut name, mut o) = (Vec::new(), offset);
 
   loop {
-    let n = message[o] as uint;
+    let n = message[o] as usize;
 
     if n == 0 {
       return Some((name, o + 1));
     } else if n < 64 {
-      match str::from_utf8(message[o + 1 .. o + n + 1]) {
-        Some(s) => {
+      match str::from_utf8(&message[o + 1 .. o + n + 1]) {
+        Ok(s) => {
           name.push(s.to_string());
           o += n + 1;
         }
-        None => {
+        Err(_) => {
           return None;
         }
       };
     } else {
-      let pointer = ((n & 0x3) << 8) + (message[o + 1] as uint);
+      let pointer = ((n & 0x3) << 8) + (message[o + 1] as usize);
       
       match unpack(message, pointer) {
         Some((s, _)) => {
@@ -37,7 +37,7 @@ pub fn unpack(message: &[u8], offset: uint) -> Option<(Vec<String>, uint)> {
 
 #[cfg(test)]
 mod tests {
-  use std::io::File;
+  use std::old_io::File;
 
   #[test]
   fn test_unpack() {
